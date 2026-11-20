@@ -1,1 +1,64 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.5rem;
+  --background: #0a0a0f;
+  --foreground: #f4f1ea;
+  --card: #13131c;
+  --card-foreground: #f4f1ea;
+  --popover: #13131c;
+  --popover-foreground: #f4f1ea;
+  --primary: #e62429;
+  --primary-foreground: #ffffff;
+  --secondary: #1d1d2a;
+  --secondary-foreground: #f4f1ea;
+  --muted: #1a1a24;
+  --muted-foreground: #9a9aab;
+  --accent: #f0b429;
+  --accent-foreground: #0a0a0f;
+  --destructive: #ff5a5f;
+  --border: #2a2a3a;
+  --input: #2a2a3a;
+  --ring: #e62429;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-heading: "Bebas Neue", Impact, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    background-image: radial-gradient(ellipse at top, rgba(230, 36, 41, 0.12), transparent 55%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  h1, h2, h3 { @apply font-heading tracking-wide; }
+}
