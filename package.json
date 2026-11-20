@@ -1,0 +1,15 @@
+{
+  "name": "doomsday-ready",
+  "private": true,
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "dev": "npm run build -w @doomsday/shared && concurrently -n api,web \"npm run dev -w @doomsday/api\" \"npm run dev -w @doomsday/web\"",
+    "build": "npm run build -w @doomsday/shared && npm run build -w @doomsday/api && npm run build -w @doomsday/web",
+    "test": "npm run build -w @doomsday/shared && npm test -w @doomsday/api",
+    "typecheck": "npm run build -w @doomsday/shared && npm run typecheck -w @doomsday/api && npm run typecheck -w @doomsday/web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "typescript": "^5.7.0"
+  }
+}
