@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Check, Circle } from "lucide-react";
+import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { EmptyState, ErrorMessage, Loading, PageTitle } from "@/components/Bits";
-import { useMovies, useRewatchOrder } from "@/lib/queries";
+import { useMovies, useRewatchOrder, useUpdateMovie } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
 const formatMinutes = (total: number) => {
@@ -17,6 +18,7 @@ export default function RewatchOrderPage() {
   const movies = useMovies();
   const [selected, setSelected] = useState<string>("");
   const plan = useRewatchOrder(selected ? Number(selected) : null);
+  const update = useUpdateMovie();
 
   return (
     <section>
@@ -70,15 +72,13 @@ export default function RewatchOrderPage() {
                     {plan.data.order.map((m, i) => (
                       <li key={m.id} className="bg-card flex items-center gap-3 rounded-lg border p-3">
                         <span className="font-heading text-muted-foreground w-8 text-2xl">{i + 1}</span>
-                        <span
-                          className={cn(
-                            "flex size-6 items-center justify-center rounded-full border",
-                            m.watched ? "bg-primary border-primary text-primary-foreground" : "text-muted-foreground",
-                          )}
-                          aria-label={m.watched ? "Watched" : "Not watched"}
-                        >
-                          {m.watched ? <Check className="size-4" /> : <Circle className="size-3" />}
-                        </span>
+                        <Checkbox
+                          checked={m.watched}
+                          onCheckedChange={(v) =>
+                            update.mutate({ id: m.id, watched: v === true }, { onError: (e) => toast.error(e.message) })
+                          }
+                          aria-label={`Mark ${m.title} as ${m.watched ? "not watched" : "watched"}`}
+                        />
                         <span className={cn("flex-1", m.watched && "text-muted-foreground line-through")}>{m.title}</span>
                         <span className="text-muted-foreground text-sm">{formatMinutes(m.runtime)}</span>
                       </li>
