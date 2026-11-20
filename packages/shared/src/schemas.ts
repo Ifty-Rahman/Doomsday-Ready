@@ -1,6 +1,8 @@
 import { z } from "zod";
 import * as C from "./constants.js";
 
+const MAX_ID = 2_147_483_647; // largest value of a Postgres integer column
+
 const title = z
   .string({ required_error: "Title is required" })
   .trim()
@@ -19,8 +21,10 @@ const runtime = z
   .min(C.MIN_RUNTIME, `Runtime must be between ${C.MIN_RUNTIME} and ${C.MAX_RUNTIME} minutes`)
   .max(C.MAX_RUNTIME, `Runtime must be between ${C.MIN_RUNTIME} and ${C.MAX_RUNTIME} minutes`);
 
+const id = z.number().int().positive().max(MAX_ID);
+
 const prerequisiteIds = z
-  .array(z.number().int().positive())
+  .array(id)
   .refine((ids) => new Set(ids).size === ids.length, "Prerequisites must be unique");
 
 export const createMovieSchema = z.object({
@@ -67,7 +71,7 @@ export const groupSizeSchema = z.coerce
   .min(C.MIN_GROUP_SIZE, `Group size must be between ${C.MIN_GROUP_SIZE} and ${C.MAX_GROUP_SIZE}`)
   .max(C.MAX_GROUP_SIZE, `Group size must be between ${C.MIN_GROUP_SIZE} and ${C.MAX_GROUP_SIZE}`);
 
-export const idParamSchema = z.object({ id: z.coerce.number().int().positive() });
+export const idParamSchema = z.object({ id: z.coerce.number().int().positive().max(MAX_ID) });
 export const bookingQuerySchema = z.object({ groupSize: groupSizeSchema });
 
 export type CreateMovieInput = z.infer<typeof createMovieSchema>;
