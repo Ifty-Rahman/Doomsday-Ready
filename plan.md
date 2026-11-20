@@ -67,12 +67,12 @@ Doomsday Ready/
 │ watched     (bool, default false) │          └──────────────────────┘
 └───────────────────────┘
         ▲        │
-        │        │ many-to-many with itself
-        └────────┘ "prerequisites"
+        │        │ linked to itself through
+        └────────┘ MoviePrerequisite(movieId, prerequisiteId, position)
 ```
 
 - A movie can have many prerequisites, and can be a prerequisite of many movies.
-- Prisma stores this in a hidden link table between movies.
+- The link table stores a `position`, so the order of prerequisites can be changed (drag and drop) and the rewatch order follows it.
 - Cinemas are separate. They have no link to movies.
 - A movie that other movies list as a prerequisite cannot be deleted (409). Remove it from their lists first.
 

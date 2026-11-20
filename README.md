@@ -16,15 +16,15 @@ docker compose up --build
 ```
 Open http://localhost:8080. The API runs the database migrations on start.
 
-**Locally** (needs Node 22+ and a Postgres database):
+**Locally** (needs Node 22+ and your own Postgres database):
 ```bash
-cp .env.example .env            # then adjust DATABASE_URL if needed
+cp .env.example apps/api/.env   # the API and Prisma read DATABASE_URL from here; edit it to match your database
 npm install
 npm run migrate:deploy -w @doomsday/api
 npm run dev                     # web on :5173, API on :3001
 ```
 
-**Tests:** `npm test`. The algorithm tests always run. The API tests (`apps/api/src/api.test.ts`) need a Postgres with the migrations applied and `DATABASE_URL` set; they wipe the Movie and Cinema tables, and are skipped otherwise.
+**Tests:** `npm test`. The algorithm tests always run. The API tests (`apps/api/src/api.test.ts`) need a Postgres with the migrations applied and `DATABASE_URL` set; they wipe the Movie and Cinema tables, so point them at a throwaway database, and they are skipped otherwise.
 
 ## Structure
 ```
@@ -50,9 +50,15 @@ erDiagram
         string nameKey UK "lower-cased name"
         int[] bundleSizes "1-10 sizes, 1-500 seats each"
     }
-    Movie }o--o{ Movie : "prerequisites"
+    MoviePrerequisite {
+        int movieId PK, FK
+        int prerequisiteId PK, FK
+        int position "order the user chose, 0 = first"
+    }
+    Movie ||--o{ MoviePrerequisite : "has prerequisites"
+    Movie ||--o{ MoviePrerequisite : "is a prerequisite of"
 ```
-A movie can have many prerequisites and be a prerequisite of many movies (a join table, `_Prerequisites`). Cinemas are separate.
+A movie can have many prerequisites and be a prerequisite of many movies. `MoviePrerequisite` is the link between two movies, and its `position` keeps the order the user set. Cinemas are separate.
 
 ## API (under `/api`)
 | Method and path | Purpose |
@@ -68,7 +74,7 @@ Errors are `{ code, message }`: `VALIDATION_ERROR` (400), `NOT_FOUND` (404), and
 
 ## The algorithms (no libraries)
 - **Loop check** (`algorithms/cycle.ts`): from each new prerequisite, walk its own prerequisites. If the walk reaches the movie being edited, there would be a loop. It runs inside a database transaction with an advisory lock, so two simultaneous edits cannot together create a loop. A newly created movie cannot be in a loop (nothing depends on it yet), so create does not run it.
-- **Rewatch order** (`algorithms/rewatchOrder.ts`): depth-first walk from the target; a movie is added after all its prerequisites, so every movie comes after its prerequisites, each appears once, and the target is left out.
+- **Rewatch order** (`algorithms/rewatchOrder.ts`): depth-first walk from the target, visiting prerequisites in the order the user set; a movie is added after all its prerequisites, so every movie comes after its prerequisites, each appears once, and the target is left out.
 - **Bundles** (`algorithms/bundles.ts`): dynamic programming over seat counts 0 to the group size, tracking the fewest bundles and the last bundle used, then tracing back to count each size.
 
 ## Assumptions

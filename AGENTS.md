@@ -19,7 +19,7 @@ docker-compose.yml, plan.md, README.md
 ```
 
 ## Data model
-- **Movie**: id, title (unique, case-insensitive), releaseYear (2008-2026), runtime (1-300), watched (default false), prerequisites (many-to-many to Movie).
+- **Movie**: id, title (unique, case-insensitive), releaseYear (2008-2026), runtime (1-300), watched (default false), prerequisites (movie-to-movie links stored in `MoviePrerequisite` with a `position`, so the user can drag to reorder them).
 - **Cinema**: id, name (unique, case-insensitive), bundleSizes (1-10 sizes, 1-500 each).
 
 ## Rules
