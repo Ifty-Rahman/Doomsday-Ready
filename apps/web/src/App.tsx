@@ -13,20 +13,18 @@ const links = [
 
 export default function App() {
   return (
-    <div className="mx-auto max-w-4xl px-4 pb-16">
-      <header className="flex flex-wrap items-end justify-between gap-4 border-b py-6">
-        <h1 className="text-4xl text-primary sm:text-5xl">
-          Doomsday <span className="text-foreground">Ready</span>
-        </h1>
-        <nav className="flex gap-1">
+    <div className="mx-auto max-w-2xl px-4 pb-16">
+      <header className="flex flex-wrap items-center justify-between gap-4 border-b py-4">
+        <h1 className="text-lg font-semibold">Doomsday Ready</h1>
+        <nav className="flex gap-4">
           {links.map((l) => (
             <NavLink
               key={l.to}
               to={l.to}
               className={({ isActive }) =>
                 cn(
-                  "font-heading rounded-md px-4 py-2 text-xl tracking-wider transition-colors",
-                  isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+                  "border-b-2 py-1 text-sm transition-colors",
+                  isActive ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground",
                 )
               }
             >
@@ -36,7 +34,7 @@ export default function App() {
         </nav>
       </header>
 
-      <main className="pt-8">
+      <main className="pt-6">
         <Routes>
           <Route path="/" element={<Navigate to="/rewatch" replace />} />
           <Route path="/rewatch" element={<RewatchOrderPage />} />

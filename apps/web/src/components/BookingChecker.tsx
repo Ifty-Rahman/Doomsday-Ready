@@ -28,7 +28,7 @@ export default function BookingChecker({ cinemas }: { cinemas: Cinema[] }) {
 
   return (
     <div className="space-y-4">
-      <form onSubmit={onSubmit} className="bg-card grid gap-4 rounded-lg border p-4 sm:grid-cols-3" noValidate>
+      <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-3" noValidate>
         <div>
           <Label>Cinema</Label>
           <Controller
@@ -58,11 +58,11 @@ export default function BookingChecker({ cinemas }: { cinemas: Cinema[] }) {
       {quote.isError && <ErrorMessage error={quote.error} />}
 
       {result && (
-        <div className="bg-card rounded-lg border p-4" aria-live="polite">
+        <div className="rounded-md border p-4" aria-live="polite">
           {result.possible ? (
             <>
-              <p className="text-2xl">
-                <span className="text-primary">{result.totalBundles}</span> {result.totalBundles === 1 ? "bundle" : "bundles"} for {result.groupSize} seats
+              <p className="font-medium">
+                {result.totalBundles} {result.totalBundles === 1 ? "bundle" : "bundles"} for {result.groupSize} seats
               </p>
               <ul className="mt-2 space-y-1">
                 {result.bundles.map((b) => (
@@ -71,7 +71,7 @@ export default function BookingChecker({ cinemas }: { cinemas: Cinema[] }) {
               </ul>
             </>
           ) : (
-            <p className="text-2xl text-destructive">Not possible: no exact combination for {result.groupSize} seats.</p>
+            <p className="text-destructive">Not possible: no exact combination for {result.groupSize} seats.</p>
           )}
         </div>
       )}

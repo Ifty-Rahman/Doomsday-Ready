@@ -37,7 +37,7 @@ export default function MovieItem({ movie, allMovies }: { movie: Movie; allMovie
     setChosen((cur) => (on ? [...cur, id] : cur.filter((x) => x !== id)));
 
   return (
-    <li className="bg-card space-y-3 rounded-lg border p-4">
+    <li className="space-y-3 py-4">
       <div className="flex flex-wrap items-center gap-3">
         <Checkbox
           id={`watched-${movie.id}`}

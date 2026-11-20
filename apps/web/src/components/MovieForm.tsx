@@ -31,7 +31,7 @@ export default function MovieForm() {
   );
 
   return (
-    <form onSubmit={onSubmit} className="bg-card grid gap-4 rounded-lg border p-4 sm:grid-cols-6" noValidate>
+    <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-6" noValidate>
       <div className="sm:col-span-6">
         <Label htmlFor="title">Title</Label>
         <Input id="title" placeholder="Iron Man" {...register("title")} />

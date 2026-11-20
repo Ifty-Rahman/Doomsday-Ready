@@ -50,7 +50,7 @@ export default function RewatchOrderPage() {
 
           {plan.data && (
             <div className="space-y-4">
-              <h3 className="text-2xl">Before you watch <span className="text-primary">{plan.data.target.title}</span></h3>
+              <h3 className="font-medium">Before you watch {plan.data.target.title}</h3>
 
               {plan.data.totalCount === 0 ? (
                 <EmptyState>Nothing to watch first. You are ready to go!</EmptyState>
@@ -68,10 +68,10 @@ export default function RewatchOrderPage() {
                     <Progress value={(plan.data.watchedCount / plan.data.totalCount) * 100} />
                   </div>
 
-                  <ol className="space-y-2">
+                  <ol className="divide-y border-y">
                     {plan.data.order.map((m, i) => (
-                      <li key={m.id} className="bg-card flex items-center gap-3 rounded-lg border p-3">
-                        <span className="font-heading text-muted-foreground w-8 text-2xl">{i + 1}</span>
+                      <li key={m.id} className="flex items-center gap-3 py-3">
+                        <span className="text-muted-foreground w-6 text-sm tabular-nums">{i + 1}</span>
                         <Checkbox
                           checked={m.watched}
                           onCheckedChange={(v) =>

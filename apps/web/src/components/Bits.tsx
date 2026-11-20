@@ -19,13 +19,13 @@ export const ErrorMessage = ({ error }: { error: unknown }) => (
 );
 
 export const EmptyState = ({ children }: { children: ReactNode }) => (
-  <div className="text-muted-foreground rounded-lg border border-dashed p-8 text-center">{children}</div>
+  <div className="text-muted-foreground rounded-md border border-dashed p-6 text-center text-sm">{children}</div>
 );
 
 export const PageTitle = ({ title, subtitle }: { title: string; subtitle: string }) => (
   <div className="mb-6">
-    <h2 className="text-4xl">{title}</h2>
-    <p className="text-muted-foreground">{subtitle}</p>
+    <h2 className="text-xl font-semibold">{title}</h2>
+    <p className="text-muted-foreground text-sm">{subtitle}</p>
   </div>
 );
 

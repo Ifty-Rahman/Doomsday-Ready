@@ -12,18 +12,18 @@ export default function CinemasPage() {
   const remove = useDeleteCinema();
 
   return (
-    <section className="space-y-10">
+    <section className="space-y-8">
       <PageTitle title="Cinemas" subtitle="Save the bundles each cinema sells, then check if your group fits exactly." />
 
       <div className="space-y-4">
-        <h3 className="text-2xl">Add a cinema</h3>
+        <h3 className="font-medium">Add a cinema</h3>
         <CinemaForm />
         {cinemas.isLoading && <Loading />}
         {cinemas.isError && <ErrorMessage error={cinemas.error} />}
         {cinemas.data?.length === 0 && <EmptyState>No cinemas yet.</EmptyState>}
-        <ul className="space-y-2">
+        <ul className="divide-y border-y">
           {cinemas.data?.map((c) => (
-            <li key={c.id} className="bg-card flex flex-wrap items-center gap-3 rounded-lg border p-3">
+            <li key={c.id} className="flex flex-wrap items-center gap-3 py-3">
               <span className="flex-1 font-medium">{c.name}</span>
               {c.bundleSizes.map((s) => <Badge key={s} variant="secondary">{s}</Badge>)}
               <ConfirmDelete
@@ -38,7 +38,7 @@ export default function CinemasPage() {
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-2xl">Check a booking</h3>
+        <h3 className="font-medium">Check a booking</h3>
         {cinemas.data && cinemas.data.length > 0 ? (
           <BookingChecker cinemas={cinemas.data} />
         ) : (

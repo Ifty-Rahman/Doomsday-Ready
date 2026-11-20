@@ -41,7 +41,7 @@ export default function CinemaForm() {
   );
 
   return (
-    <form onSubmit={onSubmit} className="bg-card space-y-4 rounded-lg border p-4" noValidate>
+    <form onSubmit={onSubmit} className="space-y-4" noValidate>
       <div>
         <Label htmlFor="cinema-name">Cinema name</Label>
         <Input id="cinema-name" placeholder="Star Cineplex" {...register("name")} />

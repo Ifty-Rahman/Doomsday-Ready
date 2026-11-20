@@ -31,7 +31,7 @@ function Row({ item, position }: { item: Item; position: number }) {
       >
         <GripVertical className="size-4" />
       </button>
-      <span className="font-heading text-muted-foreground w-5 text-lg">{position}</span>
+      <span className="text-muted-foreground w-5 text-sm tabular-nums">{position}</span>
       <span className="text-sm">{item.title}</span>
     </li>
   );

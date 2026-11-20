@@ -3,26 +3,27 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Neutral dark theme with one soft red accent */
 :root {
   --radius: 0.5rem;
-  --background: #0a0a0f;
-  --foreground: #f4f1ea;
-  --card: #13131c;
-  --card-foreground: #f4f1ea;
-  --popover: #13131c;
-  --popover-foreground: #f4f1ea;
-  --primary: #e62429;
+  --background: #0c0c0d;
+  --foreground: #ededed;
+  --card: #141415;
+  --card-foreground: #ededed;
+  --popover: #141415;
+  --popover-foreground: #ededed;
+  --primary: #e5484d;
   --primary-foreground: #ffffff;
-  --secondary: #1d1d2a;
-  --secondary-foreground: #f4f1ea;
-  --muted: #1a1a24;
-  --muted-foreground: #9a9aab;
-  --accent: #f0b429;
-  --accent-foreground: #0a0a0f;
-  --destructive: #ff5a5f;
-  --border: #2a2a3a;
-  --input: #2a2a3a;
-  --ring: #e62429;
+  --secondary: #1c1c1e;
+  --secondary-foreground: #ededed;
+  --muted: #1c1c1e;
+  --muted-foreground: #8e8e93;
+  --accent: #1c1c1e;
+  --accent-foreground: #ededed;
+  --destructive: #ff6369;
+  --border: #26262a;
+  --input: #2e2e33;
+  --ring: #e5484d;
 }
 
 @theme inline {
@@ -48,17 +49,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-heading: "Bebas Neue", Impact, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 @layer base {
   * { @apply border-border outline-ring/50; }
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    background-image: radial-gradient(ellipse at top, rgba(230, 36, 41, 0.12), transparent 55%);
-    background-attachment: fixed;
-    min-height: 100vh;
   }
-  h1, h2, h3 { @apply font-heading tracking-wide; }
 }
