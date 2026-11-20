@@ -32,17 +32,17 @@ export default function MovieForm() {
 
   return (
     <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-6" noValidate>
-      <div className="sm:col-span-6">
+      <div className="grid gap-2 sm:col-span-6">
         <Label htmlFor="title">Title</Label>
         <Input id="title" placeholder="Iron Man" {...register("title")} />
         <FieldError message={errors.title?.message} />
       </div>
-      <div className="sm:col-span-2">
+      <div className="grid gap-2 sm:col-span-2">
         <Label htmlFor="releaseYear">Release year</Label>
         <Input id="releaseYear" type="number" placeholder={String(MIN_RELEASE_YEAR)} {...register("releaseYear", { valueAsNumber: true })} />
         <FieldError message={errors.releaseYear?.message} />
       </div>
-      <div className="sm:col-span-2">
+      <div className="grid gap-2 sm:col-span-2">
         <Label htmlFor="runtime">Runtime (minutes)</Label>
         <Input id="runtime" type="number" placeholder={`1-${MAX_RUNTIME}`} {...register("runtime", { valueAsNumber: true })} />
         <FieldError message={errors.runtime?.message} />

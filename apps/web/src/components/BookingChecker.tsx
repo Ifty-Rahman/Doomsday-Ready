@@ -29,7 +29,7 @@ export default function BookingChecker({ cinemas }: { cinemas: Cinema[] }) {
   return (
     <div className="space-y-4">
       <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-3" noValidate>
-        <div>
+        <div className="grid content-start gap-2">
           <Label>Cinema</Label>
           <Controller
             control={control}
@@ -45,7 +45,7 @@ export default function BookingChecker({ cinemas }: { cinemas: Cinema[] }) {
           />
           <FieldError message={errors.cinemaId?.message} />
         </div>
-        <div>
+        <div className="grid content-start gap-2">
           <Label htmlFor="group-size">Group size</Label>
           <Input id="group-size" type="number" placeholder={`1-${MAX_GROUP_SIZE}`} {...register("groupSize")} />
           <FieldError message={errors.groupSize?.message} />

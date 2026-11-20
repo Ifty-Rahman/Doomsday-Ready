@@ -42,13 +42,13 @@ export default function CinemaForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4" noValidate>
-      <div>
+      <div className="grid gap-2">
         <Label htmlFor="cinema-name">Cinema name</Label>
         <Input id="cinema-name" placeholder="Star Cineplex" {...register("name")} />
         <FieldError message={errors.name?.message} />
       </div>
 
-      <div>
+      <div className="grid gap-2">
         <Label htmlFor="bundle-size">Bundle sizes (seats per bundle)</Label>
         <div className="flex gap-2">
           <Input
@@ -62,7 +62,7 @@ export default function CinemaForm() {
           <Button type="button" variant="outline" onClick={addSize}>Add size</Button>
         </div>
         <FieldError message={sizeError} />
-        <div className="mt-3 flex min-h-8 flex-wrap gap-2">
+        <div className="flex min-h-8 flex-wrap gap-2">
           {sizes.length === 0 && <span className="text-muted-foreground text-sm">No sizes added yet</span>}
           {sizes.map((s) => (
             <Badge key={s} variant="secondary" className="gap-1 text-sm">

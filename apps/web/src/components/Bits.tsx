@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export const FieldError = ({ message }: { message?: string }) =>
-  message ? <p className="text-destructive mt-1 text-sm" role="alert">{message}</p> : null;
+  message ? <p className="text-destructive text-sm" role="alert">{message}</p> : null;
 
 export const Loading = () => (
   <div className="text-muted-foreground flex items-center gap-2 py-6"><Loader2 className="size-4 animate-spin" /> Loading...</div>
