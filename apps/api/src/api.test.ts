@@ -60,6 +60,30 @@ run("API", async () => {
       expect(res.body).toMatchObject({ watched: true, prerequisiteIds: [b.id] });
     });
 
+    it("keeps prerequisites in the order they were sent", async () => {
+      const a = await addMovie("A");
+      const b = await addMovie("B");
+      const c = await addMovie("C");
+      const d = await addMovie("D", [c.id, a.id, b.id]);
+      expect(d).toBeDefined();
+      const list = async () => (await request(app).get("/api/movies")).body.find((m: { title: string }) => m.title === "D");
+      expect((await list()).prerequisiteIds).toEqual([c.id, a.id, b.id]);
+
+      await request(app).patch(`/api/movies/${d.id}`).send({ prerequisiteIds: [b.id, c.id, a.id] });
+      expect((await list()).prerequisiteIds).toEqual([b.id, c.id, a.id]);
+    });
+
+    it("uses the prerequisite order for the rewatch order", async () => {
+      const a = await addMovie("A");
+      const b = await addMovie("B");
+      const t = await addMovie("T", [b.id, a.id]);
+      const names = async () =>
+        (await request(app).get(`/api/movies/${t.id}/rewatch-order`)).body.order.map((m: { title: string }) => m.title);
+      expect(await names()).toEqual(["B", "A"]);
+      await request(app).patch(`/api/movies/${t.id}`).send({ prerequisiteIds: [a.id, b.id] });
+      expect(await names()).toEqual(["A", "B"]);
+    });
+
     it("returns 404 when updating a missing movie", async () => {
       const res = await request(app).patch("/api/movies/999").send({ watched: true });
       expect(res.status).toBe(404);

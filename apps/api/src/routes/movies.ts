@@ -9,7 +9,10 @@ import { rewatchOrder } from "../algorithms/rewatchOrder.js";
 
 export const moviesRouter = Router();
 
-const withPrerequisiteIds = { prerequisites: { select: { id: true } } } satisfies Prisma.MovieInclude;
+// prerequisites come back in the order the user chose
+const withPrerequisiteIds = {
+  prerequisites: { select: { prerequisiteId: true }, orderBy: { position: "asc" } },
+} satisfies Prisma.MovieInclude;
 
 type MovieRow = Prisma.MovieGetPayload<{ include: typeof withPrerequisiteIds }>;
 
@@ -19,12 +22,14 @@ const toMovie = (row: MovieRow): Movie => ({
   releaseYear: row.releaseYear,
   runtime: row.runtime,
   watched: row.watched,
-  prerequisiteIds: row.prerequisites.map((p) => p.id).sort((a, b) => a - b),
+  prerequisiteIds: row.prerequisites.map((p) => p.prerequisiteId),
 });
 
 async function loadGraph(db: Prisma.TransactionClient): Promise<PrerequisiteGraph> {
-  const rows = await db.movie.findMany({ select: { id: true, prerequisites: { select: { id: true } } } });
-  return new Map(rows.map((r) => [r.id, r.prerequisites.map((p) => p.id)]));
+  const rows = await db.movie.findMany({
+    select: { id: true, prerequisites: { select: { prerequisiteId: true }, orderBy: { position: "asc" } } },
+  });
+  return new Map(rows.map((r) => [r.id, r.prerequisites.map((p) => p.prerequisiteId)]));
 }
 
 async function assertMoviesExist(db: Prisma.TransactionClient, ids: number[]) {
@@ -40,6 +45,8 @@ async function assertMoviesExist(db: Prisma.TransactionClient, ids: number[]) {
 // Movie writes that touch prerequisites take this lock, so two requests cannot
 // each pass the loop check and then together create a loop.
 const lockMovieGraph = (db: Prisma.TransactionClient) => db.$executeRaw`SELECT pg_advisory_xact_lock(1)`;
+
+const toLinks = (ids: number[]) => ids.map((prerequisiteId, position) => ({ prerequisiteId, position }));
 
 const circularDependency = () =>
   new AppError(409, "CIRCULAR_DEPENDENCY", "A movie cannot depend on itself, directly or through other movies");
@@ -65,7 +72,7 @@ moviesRouter.post(
           ...rest,
           title,
           titleKey: normalizeKey(title),
-          prerequisites: { connect: prerequisiteIds.map((id) => ({ id })) },
+          prerequisites: { create: toLinks(prerequisiteIds) },
         },
         include: withPrerequisiteIds,
       });
@@ -94,7 +101,7 @@ moviesRouter.patch(
         data: {
           ...rest,
           ...(title !== undefined && { title, titleKey: normalizeKey(title) }),
-          ...(prerequisiteIds && { prerequisites: { set: prerequisiteIds.map((pid) => ({ id: pid })) } }),
+          ...(prerequisiteIds && { prerequisites: { deleteMany: {}, create: toLinks(prerequisiteIds) } }),
         },
         include: withPrerequisiteIds,
       });
@@ -111,11 +118,11 @@ moviesRouter.delete(
       await lockMovieGraph(tx);
       const movie = await tx.movie.findUnique({
         where: { id },
-        select: { title: true, requiredBy: { select: { title: true }, orderBy: { title: "asc" } } },
+        select: { title: true, requiredBy: { select: { movie: { select: { title: true } } } } },
       });
       if (!movie) throw notFound("Movie");
       if (movie.requiredBy.length > 0) {
-        const names = movie.requiredBy.map((m) => m.title).join(", ");
+        const names = movie.requiredBy.map((l) => l.movie.title).sort().join(", ");
         throw new AppError(
           409,
           "MOVIE_IS_PREREQUISITE",
@@ -134,13 +141,13 @@ moviesRouter.get(
     const { id } = idParamSchema.parse(req.params);
     const [target, graph, movies] = await Promise.all([
       prisma.movie.findUnique({ where: { id }, select: { id: true, title: true } }),
-      prisma.movie.findMany({ select: { id: true, prerequisites: { select: { id: true } } } }),
+      loadGraph(prisma),
       prisma.movie.findMany({ select: { id: true, title: true, runtime: true, watched: true } }),
     ]);
     if (!target) throw notFound("Movie");
 
     const byId = new Map(movies.map((m) => [m.id, m]));
-    const ids = rewatchOrder(new Map(graph.map((g) => [g.id, g.prerequisites.map((p) => p.id)])), id);
+    const ids = rewatchOrder(graph, id);
     const order = ids.map((movieId) => byId.get(movieId)!);
 
     const body: RewatchOrder = {
