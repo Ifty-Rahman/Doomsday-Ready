@@ -132,7 +132,7 @@ or `{ "possible": false, "groupSize": 7 }` when no exact combination exists.
 
 The cycle check and the database write for a movie update run in **one transaction**, so two simultaneous updates cannot together create a loop.
 
-On create, the check can never fire (a new movie has nothing depending on it). The same code runs anyway, and the README notes this.
+On create, no loop check is needed: a new movie has nothing depending on it, so it cannot be part of a loop. The README notes this.
 
 All three get Vitest tests using the examples from the assessment.
 
