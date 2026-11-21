@@ -1,6 +1,6 @@
 # Doomsday Ready
 
-Full-stack app for MCU fans: plan a rewatch before *Avengers: Doomsday* and check opening-night seat bundles. Details in `plan.md`.
+Full-stack app for MCU fans: plan a rewatch before *Avengers: Doomsday* and check opening-night seat bundles.
 
 ## Pages (in order)
 1. **Rewatch Order**: pick a movie, see its prerequisites in order with watched ticks, progress and remaining runtime.
@@ -15,7 +15,7 @@ TypeScript, Node, Express, Zod, PostgreSQL, Prisma, React, Vite, React Router, T
 apps/api          Express + Prisma (routes/, algorithms/, middleware/, prisma/)
 apps/web          React app (pages/, components/, api/)
 packages/shared   Zod schemas, constants and types used by both apps
-docker-compose.yml, plan.md, README.md
+docker-compose.yml, README.md
 ```
 
 ## Data model
