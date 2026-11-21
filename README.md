@@ -86,4 +86,4 @@ Errors are `{ code, message }`: `VALIDATION_ERROR` (400), `NOT_FOUND` (404), and
 - Bundle sizes are added one at a time in the UI and stored sorted.
 
 ## How AI was used
-Claude Code (Anthropic) was used as a coding assistant: planning the design, scaffolding the monorepo, writing the code, the tests and this README. I directed the features, stack and decisions, and reviewed the output.
+Claude Code and Opencode was used as a coding assistant: scaffolding the monorepo, writing the code, the tests. I directed the features, stack, the design and decisions, and reviewed the output.
